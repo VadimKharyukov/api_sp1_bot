@@ -1,7 +1,5 @@
 certifi==2020.4.5.1
-cffi
 chardet==3.0.4
-cryptography
 decorator==4.4.2
 future==0.18.2
 idna==2.9
