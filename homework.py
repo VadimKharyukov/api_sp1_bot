@@ -36,7 +36,7 @@ def parse_homework_status(homework):
     try:
         verdict = homework_statuses.get(homework_status)
         if verdict is None:
-            return f'неизвестный статус работы'
+            return f'Неизвестный статус работы'
     except Exception as e:
         logging.error(e)
         send_message(f'сервер не вернул статус работы {e}')
