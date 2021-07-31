@@ -20,13 +20,13 @@ logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s, %(message)s, %(levelname)s, %(name)s')
 handler = RotatingFileHandler('main.log', maxBytes=50000000, backupCount=5)
-logging.getLogger("").addHandler(handler)
+logging.getLogger(__name__).addHandler(handler)
 
 
 def parse_homework_status(homework):
     homework_name = homework.get('homework_name')
     if homework_name is None:
-        bot.send_message('Ошибка сервера,нет названия работы')
+        send_message('Ошибка сервера,нет названия работы')
     homework_statuses = {
         'approved': 'Ревьюеру всё понравилось, работа зачтена!',
         'rejected': 'К сожалению, в работе нашлись ошибки.',
@@ -34,7 +34,9 @@ def parse_homework_status(homework):
     }
     homework_status = homework.get('status')
     try:
-        verdict = homework_statuses[homework_status]
+        verdict = homework_statuses.get(homework_status)
+        if verdict is None:
+            return f'неизвестный статус работы'
     except Exception as e:
         logging.error(e)
         send_message(f'сервер не вернул статус работы {e}')
@@ -71,7 +73,7 @@ def main():
         try:
             homeworks = get_homeworks(current_timestamp)
             homework = homeworks.get('homeworks')
-            if homework:
+            if homework[0] is not None:
                 send_message(parse_homework_status(homework[0]))
             current_timestamp = homeworks.get('current_date')
             time.sleep(5 * 60)
