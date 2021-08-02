@@ -19,23 +19,23 @@ bot = telegram.Bot(token=TELEGRAM_TOKEN)
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s, %(message)s, %(levelname)s, %(name)s')
-handler = RotatingFileHandler('main.log', maxBytes=50000000, backupCount=5)
+handler = RotatingFileHandler('main.log',
+                              maxBytes=50000000,
+                              backupCount=5)
 logging.getLogger(__name__).addHandler(handler)
 
 
 def parse_homework_status(homework):
-    homework_name = homework.get('homework_name', 'Неизвестное имя')
+    homework_name = homework.get('homework_name',
+                                 'Неизвестное имя')
     homework_statuses = {
         'approved': 'Ревьюеру всё понравилось, работа зачтена!',
         'rejected': 'К сожалению, в работе нашлись ошибки.',
         'reviewing': 'Работа проходит ревью'
     }
-    homework_status = homework.get('status', 'Неизвестный статус')
-    try:
-        verdict = homework_statuses[homework_status]
-    except Exception as e:
-        logging.error(e)
-        send_message(f'сервер не вернул статус работы {e}')
+    homework_status = homework.get('status')
+    verdict = homework_statuses.get(homework_status,
+                                    'Неизвестный статус')
     return f'У вас проверили работу "{homework_name}"!\n\n{verdict}'
 
 
